@@ -1,0 +1,77 @@
+{
+  "dashboard": {
+    "title": "Cash Reconciliation Portal",
+    "depositNumber": "Deposit Number",
+    "expectedAmount": "Expected Amount",
+    "actualAmount": "Actual Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "newDepositBtn": "New Deposit",
+    "reconcileBtn": "Reconcile",
+    "languageLabel": "Idioma",
+    "auditBtn": "History"
+  },
+  "metrics": {
+    "pending": "Pending",
+    "reconciled": "Balanced",
+    "shortages": "Shortages",
+    "overages": "Overages",
+    "expected": "Expected Total",
+    "actual": "Actual Total"
+  },
+  "status": {
+    "pending": "Pending",
+    "balanced": "Balanced",
+    "overage": "Overage",
+    "shortage": "Shortage"
+  },
+  "dataTables": {
+    "search": "Search:",
+    "lengthMenu": "Show _MENU_ entries",
+    "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+    "infoEmpty": "Showing 0 to 0 of 0 entries",
+    "infoFiltered": "(filtered from _MAX_ total entries)",
+    "zeroRecords": "No matching records found",
+    "paginate": {
+      "first": "First",
+      "last": "Last",
+      "next": "Next",
+      "previous": "Previous"
+    }
+  },
+  "newDepositModal": {
+    "title": "Register New Deposit",
+    "storeNumber": "Store Number",
+    "depositNumber": "Deposit Number",
+    "expectedAmount": "Expected Amount",
+    "cancel": "Cancel",
+    "save": "Save",
+    "successTitle": "Success!",
+    "successMessage": "Deposit registered successfully.",
+    "errorTitle": "Error",
+    "validationError": "Please fill out all fields correctly."
+  },
+  "reconcileModal": {
+    "title": "Reconcile Deposit",
+    "actualAmount": "Actual Amount Received",
+    "cancel": "Cancel",
+    "save": "Process",
+    "successTitle": "Reconciled!",
+    "successMessage": "The deposit has been successfully processed.",
+    "errorTitle": "Error",
+    "validationError": "Please enter a valid amount."
+  },
+  "auditModal": {
+    "title": "Audit Trail",
+    "empty": "No audit history found for this deposit.",
+    "user": "User",
+    "action": "Action",
+    "change": "Change",
+    "error": "Could not load the audit history."
+  },
+  "exportCsvBtn": "Export to CSV",
+  "languages": {
+    "es": "Spanish",
+    "en": "English"
+  }
+}

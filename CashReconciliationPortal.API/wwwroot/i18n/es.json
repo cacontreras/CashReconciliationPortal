@@ -1,0 +1,77 @@
+{
+  "dashboard": {
+    "title": "Portal de Conciliación de Efectivo",
+    "depositNumber": "Número de Depósito",
+    "expectedAmount": "Monto Esperado",
+    "actualAmount": "Monto Real",
+    "status": "Estado",
+    "actions": "Acciones",
+    "newDepositBtn": "Nuevo Depósito",
+    "reconcileBtn": "Conciliar",
+    "languageLabel": "Language",
+    "auditBtn": "Historial"
+  },
+  "metrics": {
+    "pending": "Pendientes",
+    "reconciled": "Conciliados",
+    "shortages": "Faltantes",
+    "overages": "Sobrantes",
+    "expected": "Total Esperado",
+    "actual": "Total Real"
+  },
+  "status": {
+    "pending": "Pendiente",
+    "balanced": "Cuadrado",
+    "overage": "Sobrante",
+    "shortage": "Faltante"
+  },
+  "dataTables": {
+    "search": "Buscar:",
+    "lengthMenu": "Mostrar _MENU_ registros",
+    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+    "infoFiltered": "(filtrado de _MAX_ registros totales)",
+    "zeroRecords": "No se encontraron resultados",
+    "paginate": {
+      "first": "Primero",
+      "last": "Último",
+      "next": "Siguiente",
+      "previous": "Anterior"
+    }
+  },
+  "newDepositModal": {
+    "title": "Registrar Nuevo Depósito",
+    "storeNumber": "Número de Tienda",
+    "depositNumber": "Número de Depósito",
+    "expectedAmount": "Monto Esperado",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "successTitle": "¡Éxito!",
+    "successMessage": "Depósito registrado correctamente.",
+    "errorTitle": "Error",
+    "validationError": "Por favor completa todos los campos correctamente."
+  },
+  "reconcileModal": {
+    "title": "Conciliar Depósito",
+    "actualAmount": "Monto Real Recibido",
+    "cancel": "Cancelar",
+    "save": "Procesar",
+    "successTitle": "¡Conciliado!",
+    "successMessage": "El depósito ha sido procesado correctamente.",
+    "errorTitle": "Error",
+    "validationError": "Por favor ingresa un monto válido."
+  },
+  "auditModal": {
+    "title": "Rastro de Auditoría",
+    "empty": "No hay historial de auditoría para este depósito.",
+    "user": "Usuario",
+    "action": "Acción",
+    "change": "Cambio",
+    "error": "No se pudo cargar el historial de auditoría."
+  },
+  "exportCsvBtn": "Exportar a CSV",
+  "languages": {
+    "es": "Español",
+    "en": "Inglés"
+  }
+}
