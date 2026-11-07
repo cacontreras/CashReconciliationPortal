@@ -107,5 +107,78 @@ namespace CashReconciliationPortal.BLL.Services
 				UserId: a.UserId
 			)).ToList();
 		}
+
+		//public async Task<DataTableResponse<DepositDto>> GetPagedDepositAsyncX(DataTableRequest request)
+		//{
+		//	var searchValue = request.Search?.Value ?? string.Empty;
+		//	var skip = request.Start;
+		//	var take = request.Length;
+
+		//	var sortColumnIndex = request.Order != null && request.Order.Any() ? request.Order[0].Column : 0;
+
+		//	var sortColumn = request.Columns != null && request.Columns.Count() > sortColumnIndex
+		//		? request.Columns[sortColumnIndex].Data
+		//		: "depositNumber";
+
+		//	var sortDirection = request.Order != null && request.Order.Any() ? request.Order[0].Dir : "desc";
+
+		//	var (totalRecords, filteredRecords, dataEntities) = await _repository.GetPagedDepositsAsync(searchValue, sortColumn, sortDirection, skip, take);
+
+		//	var mappedData = dataEntities.Select(d => new DepositDto(
+		//		d.DepositId,
+		//		d.DepositNumber,
+		//		d.ExpectedAmount,
+		//		d.ActualAmount,
+		//		d.Status
+		//	)).ToList();
+
+		//	return new DataTableResponse<DepositDto>(
+		//		request.Draw,
+		//		totalRecords,
+		//		filteredRecords,
+		//		mappedData
+		//	);
+		//}
+
+		public async Task<DataTableResponse<DepositDto>> GetPagedDepositsAsync(DataTableRequest request)
+		{
+			// 1. Extraer los parámetros que nos envió JavaScript
+			var searchValue = request.Search?.Value ?? string.Empty;
+			var skip = request.Start;
+			var take = request.Length;
+
+			// Determinar qué columna pidió ordenar el usuario (si no hay, ordenamos por la primera)
+			var sortColumnIndex = request.Order != null && request.Order.Any() ? request.Order[0].Column : 0;
+			var sortColumn = request.Columns != null && request.Columns.Count > sortColumnIndex
+				 ? request.Columns[sortColumnIndex].Data
+				 : "depositNumber"; // Columna por defecto
+
+			var sortDirection = request.Order != null && request.Order.Any() ? request.Order[0].Dir : "desc";
+
+			// 2. Llamar al Repositorio pasándole solo primitivos
+			var (totalRecords, filteredRecords, dataEntities) = await _repository.GetPagedDepositsAsync(
+				 searchValue, sortColumn, sortDirection, skip, take);
+
+			// 3. Mapear las entidades de BD a tu Record DTO posicional
+			// (Ajusta los nombres a como tengas definido tu Record DTO)
+			var mappedData = dataEntities.Select(d => new DepositDto(
+				 d.DepositId,
+				 d.DepositNumber,
+				 d.StoreNumber,
+				 d.ExpectedAmount,
+				 d.ActualAmount,
+				 d.Variance,
+				 d.Status,
+				 d.DepositDate
+			)).ToList();
+
+			// 4. Retornar la estructura exacta que DataTables exige
+			return new DataTableResponse<DepositDto>(
+				 request.Draw,
+				 totalRecords,
+				 filteredRecords,
+				 mappedData
+			);
+		}
 	}
 }

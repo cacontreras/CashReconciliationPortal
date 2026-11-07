@@ -14,5 +14,7 @@ namespace CashReconciliationPortal.BLL.Interfaces
 		Task<Deposit> ReconcileDepositAsync(ReconcileDepositDto reconcileDto);
 
 		Task<IEnumerable<DepositAuditDto>> GetAuditTrailAsync(int depositId);
+
+		Task<DataTableResponse<DepositDto>> GetPagedDepositsAsync(DataTableRequest request);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using CashReconciliationPortal.Core.Entities;
+﻿using CashReconciliationPortal.Core.DTOs;
+using CashReconciliationPortal.Core.Entities;
 
 namespace CashReconciliationPortal.DAL.Interfaces
 {
@@ -15,5 +16,13 @@ namespace CashReconciliationPortal.DAL.Interfaces
 		Task AddAuditAsync(DepositAudit audit);
 
 		Task<IEnumerable<DepositAudit>> GetAuditTrailAsync(int depositId);
+
+		Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(
+			string searchValue,
+			string sortColumn,
+			string sortDirection,
+			int skip,
+			int take
+		);
 	}
 }

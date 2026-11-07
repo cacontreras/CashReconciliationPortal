@@ -66,9 +66,15 @@ function applyTranslations(translations) {
 
 function initDataTable() {
     dataTable = $('#depositsTable').DataTable({
+        serverSide: true,
+        processing: true,
         ajax: {
-            url: '/api/deposits',
-            dataSrc: ''
+            url: '/api/deposits/paged',
+            type: 'POST',
+            contentType: 'application/json',
+            data: function (d) {
+                return JSON.stringify(d);
+            }
         },
         language: currentTranslations.dataTables,
         lengthMenu: [5, 10, 20],
