@@ -54,7 +54,7 @@ namespace CashReconciliationPortal.DAL.Repositories
 		public async Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(string searchValue, string sortColumn, string sortDirection, int skip, int take)
 		{
 			// 1. Iniciamos la consulta sin ejecutarla en BD todavía
-			var query = _context.Deposits.AsQueryable();
+			var query = _context.Deposits.AsNoTracking().AsQueryable();
 
 			// 2. Obtenemos el total de registros en la tabla (antes de filtrar)
 			int totalRecords = await query.CountAsync();
