@@ -19,7 +19,7 @@ namespace CashReconciliationPortal.DAL.Interfaces
 
 		Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(
 			string searchValue,
-			string? sortColumn,
+			string sortColumn,
 			string sortDirection,
 			int skip,
 			int take

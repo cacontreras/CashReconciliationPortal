@@ -51,7 +51,7 @@ namespace CashReconciliationPortal.DAL.Repositories
 				.ToListAsync();
 		}
 
-		public async Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(string searchValue, string? sortColumn, string sortDirection, int skip, int take)
+		public async Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(string searchValue, string sortColumn, string sortDirection, int skip, int take)
 		{
 			// 1. Iniciamos la consulta sin ejecutarla en BD todavía
 			var query = _context.Deposits.AsNoTracking().AsQueryable();
@@ -73,16 +73,13 @@ namespace CashReconciliationPortal.DAL.Repositories
 
 			// 4. Ordenamiento Dinámico
 			// DataTables envía el nombre de la columna en minúsculas (camelCase), lo pasamos a PascalCase para EF Core
-			if (!string.IsNullOrWhiteSpace(sortColumn))
-			{
-				string propertyName = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
+			string propertyName = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
 
-				// EF.Property nos permite ordenar por el nombre de la propiedad en formato texto sin usar Reflection
-				query = sortDirection == "desc"
-					 ? query.OrderByDescending(e => EF.Property<object>(e, propertyName))
-					 : query.OrderBy(e => EF.Property<object>(e, propertyName));
-			}
-			
+			// EF.Property nos permite ordenar por el nombre de la propiedad en formato texto sin usar Reflection
+			query = sortDirection == "desc"
+				 ? query.OrderByDescending(e => EF.Property<object>(e, propertyName))
+				 : query.OrderBy(e => EF.Property<object>(e, propertyName));
+
 			// 5. Aplicamos la Paginación del lado del servidor (El verdadero jefe final)
 			var data = await query.Skip(skip).Take(take).ToListAsync();
 
