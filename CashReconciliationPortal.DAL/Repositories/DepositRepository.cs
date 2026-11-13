@@ -72,18 +72,59 @@ namespace CashReconciliationPortal.DAL.Repositories
 			int filteredRecords = await query.CountAsync();
 
 			// 4. Ordenamiento Dinámico
-			// DataTables envía el nombre de la columna en minúsculas (camelCase), lo pasamos a PascalCase para EF Core
-			string propertyName = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
+			IOrderedQueryable<Deposit> orderedQuery;
 
 			// EF.Property nos permite ordenar por el nombre de la propiedad en formato texto sin usar Reflection
-			query = sortDirection == "desc"
-				 ? query.OrderByDescending(e => EF.Property<object>(e, propertyName))
-				 : query.OrderBy(e => EF.Property<object>(e, propertyName));
+			switch(sortColumn)
+			{
+				case DepositsDataTableConstants.DepositNumber:
+					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.DepositNumber)
+						: query.OrderBy(d => d.DepositNumber);
+					break;
+
+				case DepositsDataTableConstants.ExpectedAmount:
+					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.ExpectedAmount)
+						: query.OrderBy(d => d.ExpectedAmount);
+					break;
+
+				case DepositsDataTableConstants.ActualAmount:
+					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.ActualAmount)
+						: query.OrderBy(d => d.ActualAmount);
+					break;
+
+				case DepositsDataTableConstants.Status:
+					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.Status)
+						: query.OrderBy(d => d.Status);
+					break;
+
+				default:
+					orderedQuery = query.OrderBy(d => d.DepositNumber);
+					break;
+			}
+
+			//Criterio de desempate para todos los criterios
+			orderedQuery = orderedQuery.ThenBy(d => d.DepositId);
 
 			// 5. Aplicamos la Paginación del lado del servidor (El verdadero jefe final)
-			var data = await query.Skip(skip).Take(take).ToListAsync();
+			//var data = await query.Skip(skip).Take(take).ToListAsync();
+			var data = await orderedQuery.Skip(skip).Take(take).ToListAsync();
 
 			return (totalRecords, filteredRecords, data);
 		}
+	}
+
+	public static class DepositsDataTableConstants
+	{
+		public const int DefaultPageSize = 5;
+
+		public const int MaxPageSize = 20;
+
+		public const string DepositNumber = "depositNumber";
+
+		public const string ExpectedAmount = "expectedAmount";
+
+		public const string ActualAmount = "actualAmount";
+
+		public const string Status = "status";
 	}
 }

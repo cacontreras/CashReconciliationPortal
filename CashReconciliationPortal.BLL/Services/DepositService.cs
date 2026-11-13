@@ -2,6 +2,7 @@
 using CashReconciliationPortal.Core.DTOs;
 using CashReconciliationPortal.Core.Entities;
 using CashReconciliationPortal.DAL.Interfaces;
+using CashReconciliationPortal.DAL.Repositories;
 
 namespace CashReconciliationPortal.BLL.Services
 {
@@ -149,9 +150,7 @@ namespace CashReconciliationPortal.BLL.Services
 
 			// Determinar qué columna pidió ordenar el usuario (si no hay, ordenamos por la primera)
 			var sortColumnIndex = request.Order != null && request.Order.Any() ? request.Order[0].Column : 0;
-			var sortColumn = request.Columns != null && request.Columns.Count > sortColumnIndex
-				 ? request.Columns[sortColumnIndex].Data
-				 : "depositNumber"; // Columna por defecto
+			var sortColumn = GetSortColumn(request.Columns, sortColumnIndex, DepositsDataTableConstants.DepositNumber); //"depositNumber"
 
 			var sortDirection = request.Order != null && request.Order.Any() ? request.Order[0].Dir : "desc";
 
@@ -179,6 +178,16 @@ namespace CashReconciliationPortal.BLL.Services
 				 filteredRecords,
 				 mappedData
 			);
+		}
+
+		private string GetSortColumn(List<DtColumn> columns, int index, string defaultValue)
+		{
+			if (columns == null || index < 0 || index >= columns.Count)
+				return defaultValue;
+
+			string? data = columns[index].Data;
+
+			return string.IsNullOrWhiteSpace(data) ? defaultValue : data;
 		}
 	}
 }
