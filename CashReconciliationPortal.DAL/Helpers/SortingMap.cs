@@ -1,15 +1,14 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Frozen;
 
 namespace CashReconciliationPortal.DAL.Helpers
 {
 	public sealed class SortingMap<TEntity>
 	{
-		private readonly Dictionary<string, Func<IQueryable<TEntity>, bool, IOrderedQueryable<TEntity>>> _columns = new(StringComparer.OrdinalIgnoreCase);
+		private readonly FrozenDictionary<string, Func<IQueryable<TEntity>, bool, IOrderedQueryable<TEntity>>> _columns;
 
-		public SortingMap<TEntity> Add<TKey>(string name, Expression<Func<TEntity, TKey>> selector)
+		internal SortingMap(FrozenDictionary<string, Func<IQueryable<TEntity>, bool, IOrderedQueryable<TEntity>>> columns)
 		{
-			_columns.Add(name, QueryableSortingHelper.CreateOrder(selector));
-			return this;
+			_columns = columns;
 		}
 
 		public IOrderedQueryable<TEntity> Apply(IQueryable<TEntity> query, string column, bool descending, string defaultColumn)

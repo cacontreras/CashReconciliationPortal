@@ -12,11 +12,12 @@ namespace CashReconciliationPortal.DAL.Repositories
 	{
 		private readonly AppDbContext _context;
 
-		private static readonly SortingMap<Deposit> SortColumns = new SortingMap<Deposit>()
+		private static readonly SortingMap<Deposit> SortColumns = new SortingMapBuilder<Deposit>()
 			.Add(DepositsDataTableConstants.DepositNumber, d => d.DepositNumber)
 			.Add(DepositsDataTableConstants.ExpectedAmount, d => d.ExpectedAmount)
 			.Add(DepositsDataTableConstants.ActualAmount, d => d.ActualAmount)
-			.Add(DepositsDataTableConstants.Status, d => d.Status);
+			.Add(DepositsDataTableConstants.Status, d => d.Status)
+			.Build();
 
 		public DepositRepository(AppDbContext context)
 		{
