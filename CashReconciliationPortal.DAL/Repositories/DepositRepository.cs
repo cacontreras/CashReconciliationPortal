@@ -51,7 +51,7 @@ namespace CashReconciliationPortal.DAL.Repositories
 				.ToListAsync();
 		}
 
-		public async Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(string searchValue, string sortColumn, string sortDirection, int skip, int take)
+		public async Task<(int TotalRecords, int FilteredRecords, IEnumerable<Deposit> Data)> GetPagedDepositsAsync(string searchValue, string sortColumn, bool sortDescending, int skip, int take)
 		{
 			// 1. Iniciamos la consulta sin ejecutarla en BD todavía
 			var query = _context.Deposits.AsNoTracking().AsQueryable();
@@ -78,22 +78,22 @@ namespace CashReconciliationPortal.DAL.Repositories
 			switch(sortColumn)
 			{
 				case DepositsDataTableConstants.DepositNumber:
-					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.DepositNumber)
+					orderedQuery = sortDescending ? query.OrderByDescending(d => d.DepositNumber)
 						: query.OrderBy(d => d.DepositNumber);
 					break;
 
 				case DepositsDataTableConstants.ExpectedAmount:
-					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.ExpectedAmount)
+					orderedQuery = sortDescending ? query.OrderByDescending(d => d.ExpectedAmount)
 						: query.OrderBy(d => d.ExpectedAmount);
 					break;
 
 				case DepositsDataTableConstants.ActualAmount:
-					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.ActualAmount)
+					orderedQuery = sortDescending ? query.OrderByDescending(d => d.ActualAmount)
 						: query.OrderBy(d => d.ActualAmount);
 					break;
 
 				case DepositsDataTableConstants.Status:
-					orderedQuery = sortDirection == "desc" ? query.OrderByDescending(d => d.Status)
+					orderedQuery = sortDescending ? query.OrderByDescending(d => d.Status)
 						: query.OrderBy(d => d.Status);
 					break;
 

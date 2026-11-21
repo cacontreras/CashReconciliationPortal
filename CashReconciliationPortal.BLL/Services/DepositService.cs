@@ -152,11 +152,14 @@ namespace CashReconciliationPortal.BLL.Services
 			var sortColumnIndex = request.Order != null && request.Order.Any() ? request.Order[0].Column : 0;
 			var sortColumn = GetSortColumn(request.Columns, sortColumnIndex, DepositsDataTableConstants.DepositNumber); //"depositNumber"
 
-			var sortDirection = request.Order != null && request.Order.Any() ? request.Order[0].Dir : "desc";
+			//var sortDirection = request.Order != null && request.Order.Any() ? request.Order[0].Dir : "desc";
+
+			var sortDirection = request.Order?.FirstOrDefault()?.Dir;
+			bool sortDescending = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
 
 			// 2. Llamar al Repositorio pasándole solo primitivos
 			var (totalRecords, filteredRecords, dataEntities) = await _repository.GetPagedDepositsAsync(
-				 searchValue, sortColumn, sortDirection, skip, take);
+				 searchValue, sortColumn, sortDescending, skip, take);
 
 			// 3. Mapear las entidades de BD a tu Record DTO posicional
 			// (Ajusta los nombres a como tengas definido tu Record DTO)
