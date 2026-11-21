@@ -1,6 +1,8 @@
-﻿using CashReconciliationPortal.Core.DTOs;
+﻿using System.Linq.Expressions;
+using CashReconciliationPortal.Core.DTOs;
 using CashReconciliationPortal.Core.Entities;
 using CashReconciliationPortal.DAL.Context;
+using CashReconciliationPortal.DAL.Helpers;
 using CashReconciliationPortal.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,14 @@ namespace CashReconciliationPortal.DAL.Repositories
 	public class DepositRepository : IDepositRepository
 	{
 		private readonly AppDbContext _context;
+
+		private static readonly Dictionary<string, Func<IQueryable<Deposit>, bool, IOrderedQueryable<Deposit>>> SortColumns = new(StringComparer.OrdinalIgnoreCase)
+		{
+			[DepositsDataTableConstants.DepositNumber] = QueryableSortingHelper.CreateOrder<Deposit, string>(d => d.DepositNumber),
+			[DepositsDataTableConstants.ExpectedAmount] = QueryableSortingHelper.CreateOrder<Deposit, decimal>(d => d.ExpectedAmount),
+			[DepositsDataTableConstants.ActualAmount] = QueryableSortingHelper.CreateOrder<Deposit, decimal>(d => d.ActualAmount),
+			[DepositsDataTableConstants.Status] = QueryableSortingHelper.CreateOrder<Deposit, string>(d => d.Status)
+		};
 
 		public DepositRepository(AppDbContext context)
 		{
@@ -72,38 +82,11 @@ namespace CashReconciliationPortal.DAL.Repositories
 			int filteredRecords = await query.CountAsync();
 
 			// 4. Ordenamiento Dinámico
-			IOrderedQueryable<Deposit> orderedQuery;
-
-			// EF.Property nos permite ordenar por el nombre de la propiedad en formato texto sin usar Reflection
-			switch(sortColumn)
-			{
-				case DepositsDataTableConstants.DepositNumber:
-					orderedQuery = sortDescending ? query.OrderByDescending(d => d.DepositNumber)
-						: query.OrderBy(d => d.DepositNumber);
-					break;
-
-				case DepositsDataTableConstants.ExpectedAmount:
-					orderedQuery = sortDescending ? query.OrderByDescending(d => d.ExpectedAmount)
-						: query.OrderBy(d => d.ExpectedAmount);
-					break;
-
-				case DepositsDataTableConstants.ActualAmount:
-					orderedQuery = sortDescending ? query.OrderByDescending(d => d.ActualAmount)
-						: query.OrderBy(d => d.ActualAmount);
-					break;
-
-				case DepositsDataTableConstants.Status:
-					orderedQuery = sortDescending ? query.OrderByDescending(d => d.Status)
-						: query.OrderBy(d => d.Status);
-					break;
-
-				default:
-					orderedQuery = query.OrderBy(d => d.DepositNumber);
-					break;
-			}
-
-			//Criterio de desempate para todos los criterios
-			orderedQuery = orderedQuery.ThenBy(d => d.DepositId);
+			if (!SortColumns.TryGetValue(sortColumn, out var orderBy))
+				orderBy = SortColumns[DepositsDataTableConstants.DepositNumber];
+			
+														 //sortDescending
+			var orderedQuery = orderBy(query, false).ThenBy(d => d.DepositId);
 
 			// 5. Aplicamos la Paginación del lado del servidor (El verdadero jefe final)
 			//var data = await query.Skip(skip).Take(take).ToListAsync();
