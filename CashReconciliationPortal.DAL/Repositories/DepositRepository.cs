@@ -12,13 +12,11 @@ namespace CashReconciliationPortal.DAL.Repositories
 	{
 		private readonly AppDbContext _context;
 
-		private static readonly Dictionary<string, Func<IQueryable<Deposit>, bool, IOrderedQueryable<Deposit>>> SortColumns = new(StringComparer.OrdinalIgnoreCase)
-		{
-			[DepositsDataTableConstants.DepositNumber] = QueryableSortingHelper.CreateOrder<Deposit, string>(d => d.DepositNumber),
-			[DepositsDataTableConstants.ExpectedAmount] = QueryableSortingHelper.CreateOrder<Deposit, decimal>(d => d.ExpectedAmount),
-			[DepositsDataTableConstants.ActualAmount] = QueryableSortingHelper.CreateOrder<Deposit, decimal>(d => d.ActualAmount),
-			[DepositsDataTableConstants.Status] = QueryableSortingHelper.CreateOrder<Deposit, string>(d => d.Status)
-		};
+		private static readonly SortingMap<Deposit> SortColumns = new SortingMap<Deposit>()
+			.Add(DepositsDataTableConstants.DepositNumber, d => d.DepositNumber)
+			.Add(DepositsDataTableConstants.ExpectedAmount, d => d.ExpectedAmount)
+			.Add(DepositsDataTableConstants.ActualAmount, d => d.ActualAmount)
+			.Add(DepositsDataTableConstants.Status, d => d.Status);
 
 		public DepositRepository(AppDbContext context)
 		{
@@ -82,11 +80,7 @@ namespace CashReconciliationPortal.DAL.Repositories
 			int filteredRecords = await query.CountAsync();
 
 			// 4. Ordenamiento Dinámico
-			if (!SortColumns.TryGetValue(sortColumn, out var orderBy))
-				orderBy = SortColumns[DepositsDataTableConstants.DepositNumber];
-			
-														 //sortDescending
-			var orderedQuery = orderBy(query, false).ThenBy(d => d.DepositId);
+			var orderedQuery = SortColumns.Apply(query, sortColumn, sortDescending, DepositsDataTableConstants.DepositNumber).ThenBy(d => d.DepositId);
 
 			// 5. Aplicamos la Paginación del lado del servidor (El verdadero jefe final)
 			//var data = await query.Skip(skip).Take(take).ToListAsync();
